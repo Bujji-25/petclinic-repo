@@ -37,13 +37,25 @@ jobs:
       - name: Verify WAR
         run: ls -lh target/petclinic.war
 
-      - name: SonarQube Analysis
+      - name: Check Sonar Configuration
         run: |
-           mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-      
+               echo "===== POM Sonar plugin ====="
+               grep -n -A5 -B2 "sonar-maven-plugin" pom.xml || true
 
+               echo "===== Maven version ====="
+                mvn -version
+
+                echo "===== Current directory ====="
+                pwd
+
+               echo "===== POM files ====="
+               find . -name pom.xml -print
+      
+      - name: SonarQube Analysis
+       run: |
+             mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
       - name: Deploy WAR to Nexus
         run: |
           mvn deploy -DskipTests
