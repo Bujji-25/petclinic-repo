@@ -1,9 +1,10 @@
-name: CI/CD PIPELINE TO BUILD AND DEPLOY TO TOMCAT  
+name: CI/CD PIPELINE TO BUILD AND DEPLOY TO TOMCAT
 
 on:
   push:
     branches:
       - master
+
   workflow_dispatch:
 
 jobs:
@@ -12,56 +13,81 @@ jobs:
 
     steps:
 
-      - name: Checkout code
+      # 1. Checkout source code
+      - name: 📥 Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
+      # 2. Set up Java
+      - name: ☕ Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '8'
+          java-version: '17'
           cache: 'maven'
 
+      # 3. Check Java and Maven versions
+      - name: 🔍 Check Java and Maven
+        run: |
+          java -version
+          mvn -version
+
+      # 4. Verify Sonar configuration
+      - name: 🔍 Check Sonar Configuration
+        run: |
+          echo "===== Current directory ====="
+          pwd
+
+          echo "===== POM files ====="
+          find . -name pom.xml -print
+
+          echo "===== Sonar plugin in POM ====="
+          grep -n -A5 -B2 "sonar-maven-plugin" pom.xml || true
+
+          echo "===== Check workflow files for old sonar command ====="
+          grep -R "sonar:sonar" .github/workflows || true
+
+      # 5. Validate Maven project
       - name: Validate with Maven
         run: mvn validate
 
+      # 6. Compile project
       - name: Compile with Maven
         run: mvn compile
 
+      # 7. Run tests
       - name: Test with Maven
         run: mvn test
 
-      - name: Package WAR
+      # 8. Package WAR
+      - name: Package with Maven
         run: mvn clean package -DskipTests
 
-      - name: Verify WAR
-        run: ls -lh target/petclinic.war
-
-      - name: Check Sonar Configuration
+      # 9. Verify WAR file
+      - name: 📦 Verify WAR file
         run: |
-               echo "===== POM Sonar plugin ====="
-               grep -n -A5 -B2 "sonar-maven-plugin" pom.xml || true
+          echo "===== Target directory ====="
+          ls -lh target/
 
-               echo "===== Maven version ====="
-                mvn -version
+          echo "===== WAR file ====="
+          ls -lh target/*.war
 
-                echo "===== Current directory ====="
-                pwd
-
-               echo "===== POM files ====="
-               find . -name pom.xml -print
-      
-      - name: SonarQube Analysis
-       run: |
-             mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
-      - name: Deploy WAR to Nexus
+      # 10. SonarQube Analysis
+      - name: 🔎 SonarQube Analysis
         run: |
-          mvn deploy -DskipTests
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
-      - name: Deploy WAR to Tomcat
+      # 11. Deploy WAR to Nexus
+      - name: 📤 Deploy WAR to Nexus
         run: |
-          curl --upload-file target/petclinic.war \
+          mvn deploy \
+            -DskipTests \
+            -DaltDeploymentRepository=nexus::default::${{ secrets.NEXUS_URL }}/repository/maven-releases/
+
+      # 12. Deploy WAR to Tomcat
+      - name: 🚀 Deploy WAR to Tomcat
+        run: |
+          curl --upload-file target/*.war \
             -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
             "${{ secrets.TOMCAT_URL }}/manager/text/deploy?path=/train-ticket&update=true"
