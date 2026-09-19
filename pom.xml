@@ -1,5 +1,4 @@
-
-       <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -7,15 +6,11 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- ==================== PROJECT INFORMATION ==================== -->
-
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-framework-petclinic</artifactId>
     <version>5.3.13</version>
 
     <name>Spring Framework Petclinic</name>
-
-    <!-- Creates a WAR file -->
     <packaging>war</packaging>
 
     <description>
@@ -25,24 +20,17 @@
 
     <url>https://spring-petclinic.github.io/</url>
 
-
-    <!-- ==================== PROPERTIES ==================== -->
-
     <properties>
 
-        <!-- Java -->
+        <!-- Generic properties -->
         <java.version>1.8</java.version>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
-
         <!-- Spring -->
         <spring-framework.version>5.3.18</spring-framework.version>
-
 
         <!-- Web dependencies -->
         <webjars-bootstrap.version>3.3.6</webjars-bootstrap.version>
@@ -50,15 +38,13 @@
         <webjars-jquery.version>3.5.1</webjars-jquery.version>
         <wro4j.version>1.8.0</wro4j.version>
 
-
-        <!-- Tomcat -->
+        <!-- Java EE / Java SE dependencies -->
         <tomcat.version>9.0.46</tomcat.version>
         <jaxb-api.version>2.3.1</jaxb-api.version>
         <jaxb-runtime.version>2.3.4</jaxb-runtime.version>
         <javax-activation.version>1.2.0</javax-activation.version>
         <servlet-api.version>4.0.4</servlet-api.version>
         <taglibs-standard.version>1.2.5</taglibs-standard.version>
-
 
         <!-- Persistence -->
         <spring-data.version>2021.1.0-RC1</spring-data.version>
@@ -67,11 +53,9 @@
         <hsqldb.version>2.5.2</hsqldb.version>
         <h2database.version>1.4.200</h2database.version>
 
-
         <!-- Logging -->
         <slf4j.version>1.7.32</slf4j.version>
         <logback.version>1.2.6</logback.version>
-
 
         <!-- Test -->
         <assertj.version>3.21.0</assertj.version>
@@ -80,16 +64,13 @@
         <hamcrest.version>2.2</hamcrest.version>
         <junit-jupiter.version>5.8.1</junit-jupiter.version>
 
-
         <!-- JDBC Drivers -->
         <mysql-driver.version>8.0.19</mysql-driver.version>
         <postgresql-driver.version>9.4.1211.jre7</postgresql-driver.version>
 
-
         <!-- Others -->
         <jackson.version>2.12.4</jackson.version>
         <aspectj.version>1.9.7</aspectj.version>
-
 
         <!-- Maven plugins -->
         <jetty-maven-plugin.version>9.4.43.v20210629</jetty-maven-plugin.version>
@@ -99,24 +80,19 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
-
-        <!-- Code coverage -->
-        <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
-
-
-        <!-- Docker -->
-        <docker.jib-maven-plugin.version>2.6.0</docker.jib-maven-plugin.version>
-        <docker.image.prefix>springcommunity</docker.image.prefix>
-
+        <jacoco-maven-plugin>0.8.6</jacoco-maven-plugin>
 
         <!-- SonarQube -->
         <sonar-maven-plugin.version>3.9.1.2184</sonar-maven-plugin.version>
 
+        <!-- Docker image -->
+        <docker.jib-maven-plugin.version>2.6.0</docker.jib-maven-plugin.version>
+        <docker.image.prefix>springcommunity</docker.image.prefix>
+
     </properties>
 
 
-    <!-- ==================== DEPENDENCY MANAGEMENT ==================== -->
-
+    <!-- Dependency Management -->
     <dependencyManagement>
 
         <dependencies>
@@ -142,8 +118,7 @@
     </dependencyManagement>
 
 
-    <!-- ==================== DEPENDENCIES ==================== -->
-
+    <!-- Dependencies -->
     <dependencies>
 
         <!-- Tomcat -->
@@ -161,14 +136,12 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!-- JSTL -->
+        <!-- Taglibs -->
         <dependency>
             <groupId>org.apache.taglibs</groupId>
             <artifactId>taglibs-standard-jstlel</artifactId>
             <version>${taglibs-standard.version}</version>
         </dependency>
-
 
         <!-- JSON -->
         <dependency>
@@ -188,8 +161,7 @@
             <scope>test</scope>
         </dependency>
 
-
-        <!-- Spring -->
+        <!-- Spring Data -->
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
@@ -219,7 +191,6 @@
             <version>${spring-framework.version}</version>
         </dependency>
 
-
         <!-- AspectJ -->
         <dependency>
             <groupId>org.aspectj</groupId>
@@ -234,7 +205,6 @@
             <scope>runtime</scope>
         </dependency>
 
-
         <!-- Tomcat JDBC -->
         <dependency>
             <groupId>org.apache.tomcat</groupId>
@@ -242,7 +212,6 @@
             <version>${tomcat.version}</version>
             <scope>runtime</scope>
         </dependency>
-
 
         <!-- Logging -->
         <dependency>
@@ -257,7 +226,6 @@
             <version>${logback.version}</version>
             <scope>runtime</scope>
         </dependency>
-
 
         <!-- Hibernate -->
         <dependency>
@@ -278,7 +246,6 @@
             <version>${hibernate.version}</version>
         </dependency>
 
-
         <!-- Webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
@@ -297,7 +264,6 @@
             <artifactId>bootstrap</artifactId>
             <version>${webjars-bootstrap.version}</version>
         </dependency>
-
 
         <!-- Testing -->
         <dependency>
@@ -340,7 +306,6 @@
             <scope>test</scope>
         </dependency>
 
-
         <!-- JAXB -->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -363,16 +328,13 @@
     </dependencies>
 
 
-    <!-- ==================== BUILD ==================== -->
-
+    <!-- Build -->
     <build>
 
-        <!-- Maven install default -->
         <defaultGoal>install</defaultGoal>
 
-        <!-- WAR file will be target/petclinic.war -->
+        <!-- WAR will be target/petclinic.war -->
         <finalName>petclinic</finalName>
-
 
         <resources>
             <resource>
@@ -380,7 +342,6 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
-
 
         <testResources>
 
@@ -397,8 +358,7 @@
 
         <plugins>
 
-            <!-- ==================== MAVEN COMPILER ==================== -->
-
+            <!-- Maven Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -406,8 +366,7 @@
             </plugin>
 
 
-            <!-- ==================== MAVEN TEST ==================== -->
-
+            <!-- Maven Surefire -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -418,12 +377,10 @@
                         <include>**/*Tests.java</include>
                     </includes>
                 </configuration>
-
             </plugin>
 
 
-            <!-- ==================== WAR / TOMCAT ==================== -->
-
+            <!-- WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -432,21 +389,10 @@
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                 </configuration>
-
             </plugin>
 
 
-            <!-- ==================== SONARQUBE ==================== -->
-
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>${sonar-maven-plugin.version}</version>
-            </plugin>
-
-
-            <!-- ==================== MAVEN ECLIPSE ==================== -->
-
+            <!-- Eclipse -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-eclipse-plugin</artifactId>
@@ -494,12 +440,10 @@
                     </additionalProjectnatures>
 
                 </configuration>
-
             </plugin>
 
 
-            <!-- ==================== ASSEMBLY ==================== -->
-
+            <!-- Assembly -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -512,16 +456,14 @@
                         </descriptorRef>
                     </descriptorRefs>
                 </configuration>
-
             </plugin>
 
 
-            <!-- ==================== JACOCO ==================== -->
-
+            <!-- JaCoCo -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-maven-plugin.version}</version>
+                <version>${jacoco-maven-plugin}</version>
 
                 <executions>
 
@@ -546,8 +488,7 @@
             </plugin>
 
 
-            <!-- ==================== RESOURCES ==================== -->
-
+            <!-- Resources -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
@@ -560,8 +501,7 @@
             </plugin>
 
 
-            <!-- ==================== WRO4J ==================== -->
-
+            <!-- Wro4j -->
             <plugin>
                 <groupId>ro.isdc.wro4j</groupId>
                 <artifactId>wro4j-maven-plugin</artifactId>
@@ -623,8 +563,7 @@
             </plugin>
 
 
-            <!-- ==================== JETTY ==================== -->
-
+            <!-- Jetty -->
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-maven-plugin</artifactId>
@@ -632,8 +571,7 @@
             </plugin>
 
 
-            <!-- ==================== DOCKER JIB ==================== -->
-
+            <!-- Jib Docker -->
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
@@ -658,12 +596,24 @@
 
             </plugin>
 
+
+            <!-- ================================================= -->
+            <!-- SONARQUBE MAVEN PLUGIN -->
+            <!-- ================================================= -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${sonar-maven-plugin.version}</version>
+            </plugin>
+
         </plugins>
 
     </build>
 
 
-    <!-- ==================== NEXUS ==================== -->
+    <!-- ========================================================= -->
+    <!-- NEXUS REPOSITORY -->
+    <!-- ========================================================= -->
 
     <distributionManagement>
 
@@ -676,8 +626,7 @@
     </distributionManagement>
 
 
-    <!-- ==================== DATABASE PROFILES ==================== -->
-
+    <!-- Profiles -->
     <profiles>
 
         <!-- H2 -->
@@ -690,14 +639,12 @@
             </activation>
 
             <properties>
-
                 <db.script>h2</db.script>
                 <jpa.database>H2</jpa.database>
                 <jdbc.driverClassName>org.h2.Driver</jdbc.driverClassName>
                 <jdbc.url>jdbc:h2:mem:petclinic</jdbc.url>
                 <jdbc.username>sa</jdbc.username>
                 <jdbc.password/>
-
             </properties>
 
             <dependencies>
@@ -810,22 +757,20 @@
     </profiles>
 
 
-    <!-- ==================== REPOSITORIES ==================== -->
-
+    <!-- Spring Repository -->
     <repositories>
 
         <repository>
 
             <id>repository.spring.milestone</id>
             <name>Spring Milestone Repository</name>
-            <url>https://repo.spring.io/milestone</url>
+
+            <url>
+                https://repo.spring.io/milestone
+            </url>
 
         </repository>
 
     </repositories>
 
 </project>
-     
-            
-       
-        
