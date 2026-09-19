@@ -1,4 +1,4 @@
-name: CI/CD PIPELINE TO BULD AND DEPLOY TO TOMCAT
+name: CI/CD PIPELINE TO BUILD AND DEPLOY TO TOMCAT
 
 on:
   push:
@@ -11,23 +11,56 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+      # 1. Checkout source code
       - name: 📥 Checkout code
         uses: actions/checkout@v4
 
+      # 2. Setup Java
       - name: ☕ Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'maven'
 
-      - name: validate with maven 
-        run:  mvn validate
-      - name: compile with maven
-        run:   mvn compile 
-      - name:  test with maven
-        run:  mvn test
-      - name: package with maven
-        run:  mvn package
-      - name: verify war file
-        run: ls -lh target/ 
-      
+      # 3. Maven Validate
+      - name: Validate with Maven
+        run: mvn validate
+
+      # 4. Maven Compile
+      - name: Compile with Maven
+        run: mvn compile
+
+      # 5. Maven Test
+      - name: Test with Maven
+        run: mvn test
+
+      # 6. Maven Package - creates WAR file
+      - name: Package with Maven
+        run: mvn clean package -DskipTests
+
+      # 7. Verify WAR file
+      - name: Verify WAR file
+        run: ls -lh target/*.war
+
+      # 8. SonarQube Analysis
+      - name: SonarQube Analysis
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+
+      # 9. Upload WAR to Nexus
+      - name: Deploy WAR to Nexus
+        run: |
+          mvn deploy \
+            -DskipTests \
+            -DaltDeploymentRepository=nexus::default::${{ secrets.NEXUS_URL }}/repository/maven-releases/
+
+      # 10. Deploy WAR to Tomcat
+      - name: Deploy WAR to Tomcat
+        run: |
+          curl --upload-file target/*.war \
+            -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
+            "${{ secrets.TOMCAT_URL }}/manager/text/deploy?path=/train-ticket&update=true"
