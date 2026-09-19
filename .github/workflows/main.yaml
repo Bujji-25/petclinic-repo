@@ -1,9 +1,9 @@
-name: CI/CD PIPELINE TO BUILD AND DEPLOY TO TOMCAT 
+name: CI/CD PIPELINE TO BUILD AND DEPLOY TO TOMCAT
 
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
 jobs:
@@ -12,55 +12,43 @@ jobs:
 
     steps:
 
-      # 1. Checkout source code
-      - name: 📥 Checkout code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Java
-      - name: ☕ Set up Java
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '17'
+          java-version: '8'
           cache: 'maven'
 
-      # 3. Maven Validate
       - name: Validate with Maven
         run: mvn validate
 
-      # 4. Maven Compile
       - name: Compile with Maven
         run: mvn compile
 
-      # 5. Maven Test
       - name: Test with Maven
         run: mvn test
 
-      # 6. Maven Package - creates WAR file
-      - name: Package with Maven
+      - name: Package WAR
         run: mvn clean package -DskipTests
 
-      # 7. Verify WAR file
-      - name: Verify WAR file
-        run: ls -lh target/*.war
+      - name: Verify WAR
+        run: ls -lh target/petclinic.war
 
-      # 8. SonarQube Analysis
       - name: SonarQube Analysis
         run: |
           mvn sonar:sonar \
             -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }}
 
-      # 9. Upload WAR to Nexus
       - name: Deploy WAR to Nexus
         run: |
-          mvn deploy \
-            -DskipTests \
-            -DaltDeploymentRepository=nexus::default::${{ secrets.NEXUS_URL }}/repository/maven-releases/
+          mvn deploy -DskipTests
 
-      # 10. Deploy WAR to Tomcat
       - name: Deploy WAR to Tomcat
         run: |
-          curl --upload-file target/*.war \
+          curl --upload-file target/petclinic.war \
             -u "${{ secrets.TOMCAT_USERNAME }}:${{ secrets.TOMCAT_PASSWORD }}" \
             "${{ secrets.TOMCAT_URL }}/manager/text/deploy?path=/train-ticket&update=true"
